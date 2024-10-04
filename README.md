@@ -4,8 +4,6 @@ A microservices project used to demo deployment to AWS EKS
 ## Services used for this project
 [Frontend](https://github.com/MortredN/eks-demo-coffeeshop-frontend) (Node.js, React, Vite)
 
-*Backend API - Customer* (TBD)
+[Backend Customer](https://github.com/MortredN/eks-demo-coffeeshop-customer) (Express.js) - Handling auth and customers
 
-*Backend API - Product* (TBD)
-
-*Backend API - Order* (TBD)
+[Backend Customer](https://github.com/MortredN/eks-demo-coffeeshop-shopping) (Express.js) - Handling products and orders
