@@ -1,0 +1,36 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: coffeeshop-frontend-deploy
+  labels:
+    app: coffeeshop-frontend
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: coffeeshop-frontend
+  template:
+    metadata:
+      labels:
+        app: coffeeshop-frontend
+    spec:
+      containers:
+        - name: eks-demo-coffeeshop-frontend
+          image: mortredn/eks-demo-coffeeshop-frontend:latest
+          resources:
+            limits:
+              cpu: "250m"
+              memory: "512Mi"
+          ports:
+            - containerPort: 8080
+          env:
+            - name: MY_APP_API_CUSTOMER_URL
+              valueFrom:
+                configMapKeyRef:
+                  name: coffeeshop-frontend-config
+                  key: MY_APP_API_CUSTOMER_URL
+            - name: MY_APP_API_SHOPPING_URL
+              valueFrom:
+                configMapKeyRef:
+                  name: coffeeshop-frontend-config
+                  key: MY_APP_API_SHOPPING_URL

@@ -1,0 +1,61 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: coffeeshop-customer-deploy
+  labels:
+    app: coffeeshop-customer
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: coffeeshop-customer
+  template:
+    metadata:
+      labels:
+        app: coffeeshop-customer
+    spec:
+      containers:
+        - name: eks-demo-coffeeshop-customer
+          image: mortredn/eks-demo-coffeeshop-customer:latest
+          resources:
+            limits:
+              cpu: "250m"
+              memory: "512Mi"
+          ports:
+            - containerPort: 4000
+          env:
+            - name: DB_USERNAME
+              valueFrom:
+                secretKeyRef:
+                  name: coffeeshop-customer-secret
+                  key: DB_USERNAME
+            - name: DB_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: coffeeshop-customer-secret
+                  key: DB_PASSWORD
+            - name: DB_HOST
+              valueFrom:
+                secretKeyRef:
+                  name: coffeeshop-customer-secret
+                  key: DB_HOST
+            - name: DB_PORT
+              valueFrom:
+                secretKeyRef:
+                  name: coffeeshop-customer-secret
+                  key: DB_PORT
+            - name: DB_DBNAME
+              valueFrom:
+                secretKeyRef:
+                  name: coffeeshop-customer-secret
+                  key: DB_DBNAME
+            - name: JWT_ACCESS_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: coffeeshop-token-secret
+                  key: JWT_ACCESS_SECRET
+            - name: JWT_REFRESH_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: coffeeshop-token-secret
+                  key: JWT_REFRESH_SECRET

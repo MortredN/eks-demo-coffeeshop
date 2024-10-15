@@ -1,0 +1,17 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: coffeeshop-ingress-frontend
+  annotations:
+    nginx.ingress.kubernetes.io/use-regex: "false"
+spec:
+  rules:
+    - http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: coffeeshop-frontend-svc
+                port:
+                  number: 8080
