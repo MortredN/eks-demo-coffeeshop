@@ -14,15 +14,27 @@ spec:
       labels:
         app: coffeeshop-customer
     spec:
+      serviceAccountName: aws-secrets-manager-sscsi-customer
+      volumes:
+        - name: coffeeshop-customer-secretvolume
+          csi:
+            driver: secrets-store.csi.k8s.io
+            readOnly: true
+            volumeAttributes:
+              secretProviderClass: coffeeshop-customer-spc
       containers:
         - name: eks-demo-coffeeshop-customer
-          image: mortredn/eks-demo-coffeeshop-customer:latest
+          image: <account_id>.dkr.ecr.<region>.amazonaws.com/mortredn/eks-demo-coffeeshop-customer:latest
           resources:
             limits:
               cpu: "250m"
               memory: "512Mi"
           ports:
             - containerPort: 4000
+          volumeMounts:
+            - name: coffeeshop-customer-secretvolume
+              mountPath: "/mnt/secrets-store"
+              readOnly: true
           env:
             - name: DB_HOST
               valueFrom:

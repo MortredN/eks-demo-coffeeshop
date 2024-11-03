@@ -1,0 +1,7 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: coffeeshop-frontend-config
+data:
+  MY_APP_API_CUSTOMER_URL: <domain_name>/api/customer
+  MY_APP_API_SHOPPING_URL: <domain_name>/api/shopping

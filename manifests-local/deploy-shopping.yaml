@@ -5,7 +5,7 @@ metadata:
   labels:
     app: coffeeshop-shopping
 spec:
-  replicas: 1
+  replicas: 2
   selector:
     matchLabels:
       app: coffeeshop-shopping
@@ -24,6 +24,21 @@ spec:
           ports:
             - containerPort: 4000
           env:
+            - name: DB_HOST
+              valueFrom:
+                configMapKeyRef:
+                  name: coffeeshop-shopping-config
+                  key: DB_HOST
+            - name: DB_PORT
+              valueFrom:
+                configMapKeyRef:
+                  name: coffeeshop-shopping-config
+                  key: DB_PORT
+            - name: DB_DBNAME
+              valueFrom:
+                configMapKeyRef:
+                  name: coffeeshop-shopping-config
+                  key: DB_DBNAME
             - name: API_CUSTOMER_URL
               valueFrom:
                 configMapKeyRef:
@@ -39,21 +54,6 @@ spec:
                 secretKeyRef:
                   name: coffeeshop-shopping-secret
                   key: DB_PASSWORD
-            - name: DB_HOST
-              valueFrom:
-                secretKeyRef:
-                  name: coffeeshop-shopping-secret
-                  key: DB_HOST
-            - name: DB_PORT
-              valueFrom:
-                secretKeyRef:
-                  name: coffeeshop-shopping-secret
-                  key: DB_PORT
-            - name: DB_DBNAME
-              valueFrom:
-                secretKeyRef:
-                  name: coffeeshop-shopping-secret
-                  key: DB_DBNAME
             - name: JWT_ACCESS_SECRET
               valueFrom:
                 secretKeyRef:

@@ -1,4 +1,13 @@
 apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: coffeeshop-customer-config
+data:
+  DB_HOST: host.minikube.internal
+  DB_PORT: "5432"
+  DB_DBNAME: <database_customer>
+---
+apiVersion: v1
 kind: Secret
 metadata:
   name: coffeeshop-customer-secret
@@ -6,6 +15,3 @@ type: Opaque
 stringData:
   DB_USERNAME: <username>
   DB_PASSWORD: <password>
-  DB_HOST: host.minikube.internal
-  DB_PORT: "5432"
-  DB_DBNAME: <database_customer>

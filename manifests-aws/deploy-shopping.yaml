@@ -1,53 +1,70 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: coffeeshop-customer-deploy
+  name: coffeeshop-shopping-deploy
   labels:
-    app: coffeeshop-customer
+    app: coffeeshop-shopping
 spec:
   replicas: 2
   selector:
     matchLabels:
-      app: coffeeshop-customer
+      app: coffeeshop-shopping
   template:
     metadata:
       labels:
-        app: coffeeshop-customer
+        app: coffeeshop-shopping
     spec:
+      serviceAccountName: aws-secrets-manager-sscsi-shopping
+      volumes:
+        - name: coffeeshop-shopping-secretvolume
+          csi:
+            driver: secrets-store.csi.k8s.io
+            readOnly: true
+            volumeAttributes:
+              secretProviderClass: coffeeshop-shopping-spc
       containers:
-        - name: eks-demo-coffeeshop-customer
-          image: mortredn/eks-demo-coffeeshop-customer:latest
+        - name: eks-demo-coffeeshop-shopping
+          image: <account_id>.dkr.ecr.<region>.amazonaws.com/mortredn/eks-demo-coffeeshop-shopping:latest
           resources:
             limits:
               cpu: "250m"
               memory: "512Mi"
           ports:
             - containerPort: 4000
+          volumeMounts:
+            - name: coffeeshop-shopping-secretvolume
+              mountPath: "/mnt/secrets-store"
+              readOnly: true
           env:
             - name: DB_HOST
               valueFrom:
                 configMapKeyRef:
-                  name: coffeeshop-customer-config
+                  name: coffeeshop-shopping-config
                   key: DB_HOST
             - name: DB_PORT
               valueFrom:
                 configMapKeyRef:
-                  name: coffeeshop-customer-config
+                  name: coffeeshop-shopping-config
                   key: DB_PORT
             - name: DB_DBNAME
               valueFrom:
                 configMapKeyRef:
-                  name: coffeeshop-customer-config
+                  name: coffeeshop-shopping-config
                   key: DB_DBNAME
+            - name: API_CUSTOMER_URL
+              valueFrom:
+                configMapKeyRef:
+                  name: coffeeshop-shopping-config
+                  key: API_CUSTOMER_URL
             - name: DB_USERNAME
               valueFrom:
                 secretKeyRef:
-                  name: coffeeshop-customer-secret
+                  name: coffeeshop-shopping-secret
                   key: DB_USERNAME
             - name: DB_PASSWORD
               valueFrom:
                 secretKeyRef:
-                  name: coffeeshop-customer-secret
+                  name: coffeeshop-shopping-secret
                   key: DB_PASSWORD
             - name: JWT_ACCESS_SECRET
               valueFrom:

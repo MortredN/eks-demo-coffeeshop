@@ -1,0 +1,9 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: coffeeshop-shopping-config
+data:
+  DB_HOST: <rds_instance_shopping_endpoint>
+  DB_PORT: "5432"
+  DB_DBNAME: eksdemo_coffeeshop_shopping
+  API_CUSTOMER_URL: http://eks-demo-coffeeshop-customer-svc.default.svc.cluster.local:4000
