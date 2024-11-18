@@ -22,4 +22,4 @@ managedNodeGroups:
     instanceType: t4g.medium
     desiredCapacity: 2
     privateNetworking: true
-    volumeSize: 10
+    volumeSize: 20
