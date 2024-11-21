@@ -1,7 +1,7 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: coffeeshop-shopping-deploy
+  name: coffeeshop-shopping-deploy-v1
   labels:
     app: coffeeshop-shopping
 spec:
@@ -9,20 +9,34 @@ spec:
   selector:
     matchLabels:
       app: coffeeshop-shopping
+      version: v1
   template:
     metadata:
       labels:
         app: coffeeshop-shopping
+        version: v1
     spec:
+      serviceAccountName: aws-secrets-manager-sscsi-shopping
+      volumes:
+        - name: coffeeshop-shopping-secretvolume
+          csi:
+            driver: secrets-store.csi.k8s.io
+            readOnly: true
+            volumeAttributes:
+              secretProviderClass: coffeeshop-shopping-spc
       containers:
         - name: eks-demo-coffeeshop-shopping
-          image: mortredn/eks-demo-coffeeshop-shopping:latest
+          image: <account_id>.dkr.ecr.<region>.amazonaws.com/mortredn/eks-demo-coffeeshop-shopping:1.1-no-migration
           resources:
             limits:
               cpu: "250m"
               memory: "512Mi"
           ports:
             - containerPort: 4000
+          volumeMounts:
+            - name: coffeeshop-shopping-secretvolume
+              mountPath: "/mnt/secrets-store"
+              readOnly: true
           env:
             - name: DB_HOST
               valueFrom:
@@ -64,5 +78,3 @@ spec:
                 secretKeyRef:
                   name: coffeeshop-token-secret
                   key: JWT_REFRESH_SECRET
-            - name: NODE_ENV
-              value: development

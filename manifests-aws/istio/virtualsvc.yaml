@@ -1,0 +1,42 @@
+apiVersion: networking.istio.io/v1beta1
+kind: VirtualService
+metadata:
+  name: coffeeshop-virtualsvc
+spec:
+  gateways:
+    - coffeeshop-ingressgateway
+  hosts:
+    - "*"
+  http:
+    - match:
+        - uri:
+            prefix: /api/customer
+      route:
+        - destination:
+            host: coffeeshop-customer-svc
+            port:
+              number: 4000
+    - match:
+        - uri:
+            prefix: /api/shopping
+      route:
+        - destination:
+            host: coffeeshop-shopping-svc
+            subset: v1
+            port:
+              number: 4000
+          weight: 50
+        - destination:
+            host: coffeeshop-shopping-svc
+            subset: v2
+            port:
+              number: 4000
+          weight: 50
+    - match:
+        - uri:
+            prefix: /
+      route:
+        - destination:
+            host: coffeeshop-frontend-svc
+            port:
+              number: 8080

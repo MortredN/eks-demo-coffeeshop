@@ -1,7 +1,7 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: coffeeshop-shopping-deploy
+  name: coffeeshop-shopping-deploy-v2
   labels:
     app: coffeeshop-shopping
 spec:
@@ -9,14 +9,16 @@ spec:
   selector:
     matchLabels:
       app: coffeeshop-shopping
+      version: v2
   template:
     metadata:
       labels:
         app: coffeeshop-shopping
+        version: v2
     spec:
       containers:
         - name: eks-demo-coffeeshop-shopping
-          image: mortredn/eks-demo-coffeeshop-shopping:latest
+          image: mortredn/eks-demo-coffeeshop-shopping:1.2-no-migration
           resources:
             limits:
               cpu: "250m"

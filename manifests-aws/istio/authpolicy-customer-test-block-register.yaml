@@ -1,0 +1,15 @@
+apiVersion: security.istio.io/v1
+kind: AuthorizationPolicy
+metadata:
+  namespace: default
+  name: coffeeshop-authpolicy-customer
+spec:
+  selector:
+    matchLabels:
+      app: coffeeshop-customer
+  action: ALLOW
+  rules:
+    - to:
+        - operation:
+            methods: ["GET"]
+            paths: ["/api/customer/me/*"]

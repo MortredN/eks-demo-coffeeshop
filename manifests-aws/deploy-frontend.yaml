@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
         - name: eks-demo-coffeeshop-frontend
-          image: 196940963499.dkr.ecr.us-east-1.amazonaws.com/mortredn/eks-demo-coffeeshop-frontend:latest
+          image: <account_id>.dkr.ecr.<region>.amazonaws.com/mortredn/eks-demo-coffeeshop-frontend:latest
           resources:
             limits:
               cpu: "250m"

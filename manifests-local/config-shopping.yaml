@@ -6,7 +6,7 @@ data:
   DB_HOST: host.minikube.internal
   DB_PORT: "5432"
   DB_DBNAME: <database_shopping>
-  API_CUSTOMER_URL: http://eks-demo-coffeeshop-customer-svc.default.svc.cluster.local:4000
+  API_CUSTOMER_URL: http://coffeeshop-customer-svc.default.svc.cluster.local:4000/api/customer
 ---
 apiVersion: v1
 kind: Secret

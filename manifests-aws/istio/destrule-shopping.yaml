@@ -1,0 +1,15 @@
+apiVersion: networking.istio.io/v1
+kind: DestinationRule
+metadata:
+  name: coffeeshop-shopping-destination
+spec:
+  host: coffeeshop-shopping-svc
+  subsets:
+    - name: v1
+      labels:
+        app: coffeeshop-shopping
+        version: v1
+    - name: v2
+      labels:
+        app: coffeeshop-shopping
+        version: v2
