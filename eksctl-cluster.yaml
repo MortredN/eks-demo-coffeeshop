@@ -20,6 +20,8 @@ vpc:
 managedNodeGroups:
   - name: general
     instanceType: t4g.medium
+    minSize: 2
+    maxSize: 6
     desiredCapacity: 2
     privateNetworking: true
     volumeSize: 20
