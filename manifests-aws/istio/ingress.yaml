@@ -1,12 +1,12 @@
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: coffeeshop-ingress
+  name: coffeeshop-ingress-istio
   namespace: istio-system
   annotations:
     alb.ingress.kubernetes.io/scheme: internet-facing
     alb.ingress.kubernetes.io/target-type: ip
-    alb.ingress.kubernetes.io/load-balancer-name: eks-demo-alb
+    alb.ingress.kubernetes.io/load-balancer-name: eks-demo-istio-alb
     alb.ingress.kubernetes.io/subnets: <public_subnet_1_id>,<public_subnet_2_id>
     alb.ingress.kubernetes.io/certificate-arn: <acm_certificate_arn>
     alb.ingress.kubernetes.io/listen-ports: '[{"HTTP": 80}, {"HTTPS":443}]'
