@@ -40,8 +40,8 @@ variable "subnet_alb2_cidr" {
   type        = string
   default     = "10.0.6.0/24"
 }
-variable "subnet_ssm_cidr" {
-  description = "Subnet SSM (Bastion)'s CIDR Range (private)"
+variable "subnet_bastion_cidr" {
+  description = "Subnet SSM Bastion's CIDR Range (private)"
   type        = string
   default     = "10.0.7.0/24"
 }

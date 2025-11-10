@@ -15,7 +15,7 @@ variable "az2" {
   default     = "us-east-1b"
 }
 variable "az3" {
-  description = "AZ for subnets: SSM (Bastion) & NAT Gateway"
+  description = "AZ for subnets: SSM Bastion & NAT Gateway"
   type        = string
   default     = "us-east-1c"
 }

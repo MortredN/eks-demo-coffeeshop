@@ -74,13 +74,13 @@ resource "aws_subnet" "alb2" {
 
 
 ## AZ 3
-resource "aws_subnet" "ssm" {
+resource "aws_subnet" "bastion" {
   vpc_id            = aws_vpc.main_vpc.id
   availability_zone = var.az3
-  cidr_block        = var.subnet_ssm_cidr
+  cidr_block        = var.subnet_bastion_cidr
 
   tags = {
-    "Name" = "${var.project_name}-subnet-ssm"
+    "Name" = "${var.project_name}-subnet-bastion"
   }
 }
 resource "aws_subnet" "natgw" {
@@ -172,8 +172,8 @@ resource "aws_route_table_association" "public_natgw" {
   subnet_id      = aws_subnet.natgw.id
 }
 
-## SSM/Bastion subnet (private, connect to NAT Gateway only)
-resource "aws_route_table" "ssm" {
+## SSM Bastion subnet (private, connect to NAT Gateway only)
+resource "aws_route_table" "bastion" {
   vpc_id = aws_vpc.main_vpc.id
 
   route {
@@ -182,11 +182,11 @@ resource "aws_route_table" "ssm" {
   }
 
   tags = {
-    "Name" = "${var.project_name}-ssm-rtb"
+    "Name" = "${var.project_name}-bastion-rtb"
   }
 }
 
-resource "aws_route_table_association" "ssm" {
-  route_table_id = aws_route_table.ssm.id
-  subnet_id      = aws_subnet.ssm.id
+resource "aws_route_table_association" "bastion" {
+  route_table_id = aws_route_table.bastion.id
+  subnet_id      = aws_subnet.bastion.id
 }
