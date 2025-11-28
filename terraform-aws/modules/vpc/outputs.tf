@@ -14,3 +14,11 @@ output "subnet_ids" {
     natgw   = aws_subnet.natgw_subnet.id
   }
 }
+
+output "route_table_ids" {
+  value = {
+    private = aws_route_table.private_rtb.id
+    public  = aws_route_table.public_rtb.id
+    bastion = aws_route_table.bastion_rtb.id
+  }
+}

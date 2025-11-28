@@ -11,6 +11,7 @@ resource "aws_vpc" "main_vpc" {
   }
 }
 
+
 # Subnets
 ## AZ 1
 resource "aws_subnet" "eks1_subnet" {
@@ -22,6 +23,7 @@ resource "aws_subnet" "eks1_subnet" {
     "Name" = "${var.project_name}-subnet-eks1"
   }
 }
+
 resource "aws_subnet" "rds1_subnet" {
   vpc_id            = aws_vpc.main_vpc.id
   availability_zone = var.az1
@@ -31,6 +33,7 @@ resource "aws_subnet" "rds1_subnet" {
     "Name" = "${var.project_name}-subnet-rds1"
   }
 }
+
 resource "aws_subnet" "alb1_subnet" {
   vpc_id            = aws_vpc.main_vpc.id
   availability_zone = var.az1
@@ -42,6 +45,7 @@ resource "aws_subnet" "alb1_subnet" {
   }
 }
 
+
 ## AZ 2
 resource "aws_subnet" "eks2_subnet" {
   vpc_id            = aws_vpc.main_vpc.id
@@ -52,6 +56,7 @@ resource "aws_subnet" "eks2_subnet" {
     "Name" = "${var.project_name}-subnet-eks2"
   }
 }
+
 resource "aws_subnet" "rds2_subnet" {
   vpc_id            = aws_vpc.main_vpc.id
   availability_zone = var.az2
@@ -61,6 +66,7 @@ resource "aws_subnet" "rds2_subnet" {
     "Name" = "${var.project_name}-subnet-eks1"
   }
 }
+
 resource "aws_subnet" "alb2_subnet" {
   vpc_id            = aws_vpc.main_vpc.id
   availability_zone = var.az2
@@ -93,6 +99,7 @@ resource "aws_subnet" "natgw_subnet" {
   }
 }
 
+
 # Internet Gateway
 resource "aws_internet_gateway" "default_igw" {
   vpc_id = aws_vpc.main_vpc.id
@@ -101,6 +108,7 @@ resource "aws_internet_gateway" "default_igw" {
     "Name" = "${var.project_name}-igw"
   }
 }
+
 
 # External IP & NAT Gateway
 resource "aws_eip" "default_natgw_eip" {
@@ -118,6 +126,7 @@ resource "aws_nat_gateway" "default_natgw" {
   depends_on = [aws_internet_gateway.default]
 }
 
+
 # Route tables & associations
 ## Private subnets: EKS & RDS
 resource "aws_route_table" "private_rtb" {
@@ -132,18 +141,22 @@ resource "aws_route_table_association" "private_eks_1" {
   route_table_id = aws_route_table.private_rtb.id
   subnet_id      = aws_subnet.eks1_subnet.id
 }
+
 resource "aws_route_table_association" "private_eks_2" {
   route_table_id = aws_route_table.private_rtb.id
   subnet_id      = aws_subnet.eks2_subnet.id
 }
+
 resource "aws_route_table_association" "private_rds_1" {
   route_table_id = aws_route_table.private_rtb.id
   subnet_id      = aws_subnet.rds1_subnet.id
 }
+
 resource "aws_route_table_association" "private_rds_2" {
   route_table_id = aws_route_table.private_rtb.id
   subnet_id      = aws_subnet.rds2_subnet.id
 }
+
 
 ## Public subnets: ALB & NAT Gateway
 resource "aws_route_table" "public_rtb" {
@@ -163,17 +176,20 @@ resource "aws_route_table_association" "public_alb_1" {
   route_table_id = aws_route_table.public_rtb.id
   subnet_id      = aws_subnet.alb1_subnet.id
 }
+
 resource "aws_route_table_association" "public_alb_2" {
   route_table_id = aws_route_table.public_rtb.id
   subnet_id      = aws_subnet.alb2_subnet.id
 }
+
 resource "aws_route_table_association" "public_natgw" {
   route_table_id = aws_route_table.public_rtb.id
   subnet_id      = aws_subnet.natgw_subnet.id
 }
 
+
 ## SSM Bastion subnet (private, connect to NAT Gateway only)
-resource "aws_route_table" "bastion" {
+resource "aws_route_table" "bastion_rtb" {
   vpc_id = aws_vpc.main_vpc.id
 
   route {
@@ -187,6 +203,6 @@ resource "aws_route_table" "bastion" {
 }
 
 resource "aws_route_table_association" "bastion" {
-  route_table_id = aws_route_table.bastion.id
+  route_table_id = aws_route_table.bastion_rtb.id
   subnet_id      = aws_subnet.bastion_subnet.id
 }

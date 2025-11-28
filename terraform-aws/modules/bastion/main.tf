@@ -1,5 +1,6 @@
-# Bastion for EKS Cluster
-## IAM Role, Policies, and the Instance Profile
+### Bastion for EKS Cluster ###
+
+# IAM Role, Policies, and the Instance Profile
 resource "aws_iam_role" "bastion_eks_role" {
   name = "${var.project_name}-bastion-eks-role"
 
@@ -46,7 +47,8 @@ resource "aws_iam_instance_profile" "bastion_eks_profile" {
   role = aws_iam_role.bastion_eks_role.name
 }
 
-## Security Group
+
+# Security Group
 resource "aws_security_group" "bastion_eks_sg" {
   name        = "${var.project_name}-bastion-eks-sg"
   description = "SG of bastion host for EKS cluster"
@@ -65,13 +67,15 @@ resource "aws_vpc_security_group_egress_rule" "bastion_eks_allow_https" {
   to_port           = 443
 }
 
-## Key pair
+
+# Key pair
 resource "aws_key_pair" "bastion_eks" {
   key_name   = "${var.project_name}-bastion-eks"
   public_key = file(pathexpand("~/.ssh/eks-demo-bastion-eks.pub"))
 }
 
-## EC2 Instance
+
+# EC2 Instance
 data "aws_ami" "al2023-arm64" {
   most_recent = true
   owners      = ["amazon"]
