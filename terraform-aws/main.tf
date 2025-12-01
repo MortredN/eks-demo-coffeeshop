@@ -28,3 +28,11 @@ module "eks" {
   bastion_eks_sg_id    = module.bastion.bastion_eks_sg_id
 }
 
+module "rds" {
+  source            = "./modules/rds"
+  project_name      = local.project_name
+  vpc_id            = module.vpc.vpc_id
+  subnet_ids        = module.vpc.subnet_ids
+  eks_cluster_sg_id = module.eks.eks_cluster_sg_id
+  bastion_rds_sg_id = module.bastion.bastion_rds_sg_id
+}

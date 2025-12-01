@@ -9,3 +9,11 @@ output "bastion_eks_role_arn" {
 output "bastion_eks_sg_id" {
   value = aws_security_group.bastion_eks_sg.id
 }
+
+output "bastion_rds_instance_id" {
+  value = aws_instance.bastion_rds.id
+}
+
+output "bastion_rds_sg_id" {
+  value = aws_security_group.bastion_rds_sg.id
+}

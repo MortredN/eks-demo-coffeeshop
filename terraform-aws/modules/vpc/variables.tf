@@ -1,8 +1,16 @@
 # Referencing from root
-variable "project_name" {}
-variable "az1" {}
-variable "az2" {}
-variable "az3" {}
+variable "project_name" {
+  type = string
+}
+variable "az1" {
+  type = string
+}
+variable "az2" {
+  type = string
+}
+variable "az3" {
+  type = string
+}
 
 variable "main_vpc_cidr" {
   description = "Main VPC's CIDR Range"

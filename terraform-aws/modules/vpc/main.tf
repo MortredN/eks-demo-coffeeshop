@@ -63,7 +63,7 @@ resource "aws_subnet" "rds2_subnet" {
   cidr_block        = var.subnet_rds2_cidr
 
   tags = {
-    "Name" = "${var.project_name}-subnet-eks1"
+    "Name" = "${var.project_name}-subnet-rds2"
   }
 }
 
