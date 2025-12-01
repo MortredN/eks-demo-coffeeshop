@@ -123,7 +123,7 @@ resource "aws_nat_gateway" "default_natgw" {
   tags = {
     "Name" = "${var.project_name}-natgw"
   }
-  depends_on = [aws_internet_gateway.default]
+  depends_on = [aws_internet_gateway.default_igw]
 }
 
 

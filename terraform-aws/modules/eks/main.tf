@@ -35,34 +35,29 @@ resource "aws_iam_role_policy" "eks_manage_nodes_policy" {
     Version = "2012-10-17"
     Statement = [
       {
-        "Version" : "2012-10-17",
-        "Statement" : [
-          {
-            "Effect" : "Allow",
-            "Action" : [
-              "ec2:CreateTags"
-            ],
-            "Resource" : "arn:aws:ec2:*:*:instance/*",
-            "Condition" : {
-              "ForAnyValue:StringLike" : {
-                "aws:TagKeys" : "kubernetes.io/cluster/*"
-              }
-            }
-          },
-          {
-            "Effect" : "Allow",
-            "Action" : [
-              "ec2:DescribeInstances",
-              "ec2:DescribeNetworkInterfaces",
-              "ec2:DescribeVpcs",
-              "ec2:DescribeDhcpOptions",
-              "ec2:DescribeAvailabilityZones",
-              "ec2:DescribeInstanceTopology",
-              "kms:DescribeKey"
-            ],
-            "Resource" : "*"
+        "Effect" : "Allow",
+        "Action" : [
+          "ec2:CreateTags"
+        ],
+        "Resource" : "arn:aws:ec2:*:*:instance/*",
+        "Condition" : {
+          "ForAnyValue:StringLike" : {
+            "aws:TagKeys" : "kubernetes.io/cluster/*"
           }
-        ]
+        }
+      },
+      {
+        "Effect" : "Allow",
+        "Action" : [
+          "ec2:DescribeInstances",
+          "ec2:DescribeNetworkInterfaces",
+          "ec2:DescribeVpcs",
+          "ec2:DescribeDhcpOptions",
+          "ec2:DescribeAvailabilityZones",
+          "ec2:DescribeInstanceTopology",
+          "kms:DescribeKey"
+        ],
+        "Resource" : "*"
       }
     ]
   })
@@ -138,6 +133,38 @@ resource "aws_eks_cluster" "main" {
 }
 
 
+# Security group inbound rule for bastion host
+resource "aws_vpc_security_group_ingress_rule" "bastion_to_eks_api" {
+  security_group_id = aws_eks_cluster.main.vpc_config[0].cluster_security_group_id
+  description       = "Allow bastion host to access EKS API server"
+
+  referenced_security_group_id = var.bastion_eks_sg_id
+  ip_protocol                  = "tcp"
+  from_port                    = 443
+  to_port                      = 443
+}
+
+
+# Access entry & associated admin policy for  bastion host
+resource "aws_eks_access_entry" "bastion" {
+  cluster_name  = aws_eks_cluster.main.name
+  principal_arn = var.bastion_eks_role_arn
+  type          = "STANDARD"
+}
+
+resource "aws_eks_access_policy_association" "bastion_admin" {
+  cluster_name  = aws_eks_cluster.main.name
+  principal_arn = var.bastion_eks_role_arn
+  policy_arn    = "arn:aws:eks::aws:cluster-access-policy/AmazonEKSClusterAdminPolicy"
+
+  access_scope {
+    type = "cluster"
+  }
+
+  depends_on = [aws_eks_access_entry.bastion]
+}
+
+
 # EC2 Launch Template & EKS Node group
 resource "aws_launch_template" "eks_nodes" {
   name_prefix = "${var.project_name}-eks-node-"
@@ -147,7 +174,7 @@ resource "aws_launch_template" "eks_nodes" {
     device_name = "/dev/xvda"
 
     ebs {
-      volume_size           = 10
+      volume_size           = 20
       volume_type           = "gp3"
       iops                  = 3000
       throughput            = 125
