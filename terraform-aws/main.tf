@@ -1,3 +1,6 @@
+# Getting Account ID
+data "aws_caller_identity" "current" {}
+
 module "ecr" {
   source = "./modules/ecr"
 }

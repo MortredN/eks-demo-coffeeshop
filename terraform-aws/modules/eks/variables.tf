@@ -33,3 +33,20 @@ variable "bastion_eks_role_arn" {
 variable "bastion_eks_sg_id" {
   type = string
 }
+
+# Used only when the ALB has been created by the AWS LBC
+variable "enable_cloudfront" {
+  description = "Enable CloudFront distribution (set to true after ALB is created)"
+  type        = bool
+  default     = false
+}
+variable "alb_name" {
+  description = "The ALB's name (based on the ingress manifest)"
+  type        = string
+  default     = "eks-demo-alb"
+}
+variable "alb_namespace" {
+  description = "Namespace where the ALB is deployed"
+  type        = string
+  default     = "default"
+}
