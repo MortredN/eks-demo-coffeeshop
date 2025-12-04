@@ -21,3 +21,11 @@ output "acm_cert_arn" {
 output "cloudfront_domain_name" {
   value = aws_cloudfront_distribution.main[0].domain_name
 }
+
+output "oidc_eks_cluster_arn" {
+  value = aws_iam_openid_connect_provider.eks_cluster.arn
+}
+
+output "oidc_eks_cluster_url" {
+  value = aws_iam_openid_connect_provider.eks_cluster.url
+}

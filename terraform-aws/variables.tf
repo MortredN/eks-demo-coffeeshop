@@ -19,3 +19,9 @@ variable "az3" {
   type        = string
   default     = "us-east-1c"
 }
+
+variable "enable_cloudfront" {
+  description = "Enable CloudFront distribution (set to true only after ALB is created)"
+  type        = bool
+  default     = false
+}

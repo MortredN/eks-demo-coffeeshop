@@ -33,3 +33,21 @@ resource "aws_ecr_repository" "aws_lbc" {
   name                 = "eks/aws-load-balancer-controller"
   image_tag_mutability = "MUTABLE"
 }
+
+## Secrets Store CSI Driver
+resource "aws_ecr_repository" "sscsi_node_driver_registrar" {
+  name                 = "sig-storage/csi-node-driver-registrar"
+  image_tag_mutability = "MUTABLE"
+}
+resource "aws_ecr_repository" "sscsi_driver" {
+  name                 = "csi-secrets-store/driver"
+  image_tag_mutability = "MUTABLE"
+}
+resource "aws_ecr_repository" "sscsi_livenessprobe" {
+  name                 = "sig-storage/livenessprobe"
+  image_tag_mutability = "MUTABLE"
+}
+resource "aws_ecr_repository" "sscsi_aws_provider" {
+  name                 = "aws-secrets-manager/secrets-store-csi-driver-provider-aws"
+  image_tag_mutability = "MUTABLE"
+}

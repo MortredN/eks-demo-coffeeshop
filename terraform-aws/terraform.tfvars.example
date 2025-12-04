@@ -1,0 +1,2 @@
+# Change to true only if AWS ALB is created
+enable_cloudfront = false

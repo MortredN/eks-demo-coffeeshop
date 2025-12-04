@@ -29,6 +29,7 @@ module "eks" {
   route_table_ids      = module.vpc.route_table_ids
   bastion_eks_role_arn = module.bastion.bastion_eks_role_arn
   bastion_eks_sg_id    = module.bastion.bastion_eks_sg_id
+  enable_cloudfront    = var.enable_cloudfront
 }
 
 module "rds" {
@@ -38,4 +39,13 @@ module "rds" {
   subnet_ids        = module.vpc.subnet_ids
   eks_cluster_sg_id = module.eks.eks_cluster_sg_id
   bastion_rds_sg_id = module.bastion.bastion_rds_sg_id
+}
+
+module "secret" {
+  source                     = "./modules/secret"
+  project_name               = local.project_name
+  oidc_eks_cluster_arn       = module.eks.oidc_eks_cluster_arn
+  oidc_eks_cluster_url       = module.eks.oidc_eks_cluster_url
+  rds_db_customer_secret_arn = module.rds.rds_db_customer_secret_arn
+  rds_db_shopping_secret_arn = module.rds.rds_db_shopping_secret_arn
 }

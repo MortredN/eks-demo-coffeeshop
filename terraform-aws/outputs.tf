@@ -45,3 +45,15 @@ output "acm_cert_arn" {
 output "cloudfront_domain_name" {
   value = module.eks.cloudfront_domain_name
 }
+
+output "token_secret_arn" {
+  value = module.secret.token_secret_arn
+}
+
+output "sscsi_customer_role_arn" {
+  value = module.secret.sscsi_customer_role_arn
+}
+
+output "sscsi_shopping_role_arn" {
+  value = module.secret.sscsi_shopping_role_arn
+}

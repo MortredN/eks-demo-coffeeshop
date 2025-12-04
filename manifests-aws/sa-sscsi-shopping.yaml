@@ -1,0 +1,7 @@
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: aws-secrets-manager-sscsi-shopping
+  namespace: default
+  annotations:
+    eks.amazonaws.com/role-arn: <sscsi_shopping_role_arn>
