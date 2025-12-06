@@ -51,3 +51,9 @@ resource "aws_ecr_repository" "sscsi_aws_provider" {
   name                 = "aws-secrets-manager/secrets-store-csi-driver-provider-aws"
   image_tag_mutability = "MUTABLE"
 }
+
+## Metrics Server
+resource "aws_ecr_repository" "metrics_server" {
+  name                 = "kubernetes-sigs/metrics-server"
+  image_tag_mutability = "MUTABLE"
+}

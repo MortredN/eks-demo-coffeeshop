@@ -341,6 +341,23 @@ resource "aws_vpc_endpoint" "secrets" {
 }
 
 
+resource "aws_vpc_endpoint" "autoscaling" {
+  vpc_id            = var.vpc_id
+  service_name      = "com.amazonaws.${var.region_primary}.autoscaling"
+  vpc_endpoint_type = "Interface"
+  subnet_ids = [
+    var.subnet_ids.eks1,
+    var.subnet_ids.eks2
+  ]
+  security_group_ids  = [aws_eks_cluster.main.vpc_config[0].cluster_security_group_id]
+  private_dns_enabled = true
+
+  tags = {
+    Name = "${var.project_name}-endpoint-autoscaling"
+  }
+}
+
+
 ## Gateway endpoint for S3
 resource "aws_vpc_endpoint" "s3" {
   vpc_id            = var.vpc_id
@@ -723,4 +740,64 @@ resource "aws_cloudfront_distribution" "main" {
   tags = {
     Name = "${var.project_name}-cdn"
   }
+}
+
+
+# Cluster Autoscaler
+## IAM Role for CA
+resource "aws_iam_role" "cluster_autoscaler_role" {
+  name = "${var.project_name}-cluster-autoscaler-role"
+
+  assume_role_policy = jsonencode({
+    Version = "2012-10-17"
+    Statement = [
+      {
+        Action = "sts:AssumeRoleWithWebIdentity"
+        Effect = "Allow"
+        Principal = {
+          Federated = aws_iam_openid_connect_provider.eks_cluster.arn
+        }
+        Condition = {
+          StringEquals = {
+            "${replace(aws_iam_openid_connect_provider.eks_cluster.url, "https://", "")}:sub" = "system:serviceaccount:kube-system:cluster-autoscaler"
+            "${replace(aws_iam_openid_connect_provider.eks_cluster.url, "https://", "")}:aud" = "sts.amazonaws.com"
+          }
+        }
+      }
+    ]
+  })
+}
+
+resource "aws_iam_role_policy" "cluster_autoscaler_policy" {
+  name = "${var.project_name}-cluster-autoscaler-policy"
+  role = aws_iam_role.cluster_autoscaler_role.id
+
+  policy = jsonencode({
+    Version = "2012-10-17"
+    Statement = [
+      {
+        Effect = "Allow"
+        Action = [
+          "autoscaling:DescribeAutoScalingGroups",
+          "autoscaling:DescribeAutoScalingInstances",
+          "autoscaling:DescribeLaunchConfigurations",
+          "autoscaling:DescribeScalingActivities",
+          "ec2:DescribeImages",
+          "ec2:DescribeInstanceTypes",
+          "ec2:DescribeLaunchTemplateVersions",
+          "ec2:GetInstanceTypesFromInstanceRequirements",
+          "eks:DescribeNodegroup"
+        ]
+        Resource = "*"
+      },
+      {
+        Effect = "Allow"
+        Action = [
+          "autoscaling:SetDesiredCapacity",
+          "autoscaling:TerminateInstanceInAutoScalingGroup"
+        ]
+        Resource = "*"
+      },
+    ]
+  })
 }

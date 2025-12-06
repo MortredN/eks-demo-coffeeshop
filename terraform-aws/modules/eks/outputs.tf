@@ -29,3 +29,8 @@ output "oidc_eks_cluster_arn" {
 output "oidc_eks_cluster_url" {
   value = aws_iam_openid_connect_provider.eks_cluster.url
 }
+
+output "cluster_autoscaler_role_arn" {
+  value = aws_iam_role.cluster_autoscaler_role.arn
+}
+

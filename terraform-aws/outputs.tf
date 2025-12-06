@@ -57,3 +57,7 @@ output "sscsi_customer_role_arn" {
 output "sscsi_shopping_role_arn" {
   value = module.secret.sscsi_shopping_role_arn
 }
+
+output "cluster_autoscaler_role_arn" {
+  value = module.eks.cluster_autoscaler_role_arn
+}
