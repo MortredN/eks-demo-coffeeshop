@@ -34,3 +34,6 @@ output "cluster_autoscaler_role_arn" {
   value = aws_iam_role.cluster_autoscaler_role.arn
 }
 
+output "cloudwatch_agent_role_arn" {
+  value = aws_iam_role.cloudwatch_agent_role.arn
+}

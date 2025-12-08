@@ -61,3 +61,7 @@ output "sscsi_shopping_role_arn" {
 output "cluster_autoscaler_role_arn" {
   value = module.eks.cluster_autoscaler_role_arn
 }
+
+output "cloudwatch_agent_role_arn" {
+  value = module.eks.cloudwatch_agent_role_arn
+}
