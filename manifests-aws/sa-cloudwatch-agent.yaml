@@ -1,0 +1,7 @@
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: cloudwatch-agent
+  namespace: amazon-cloudwatch
+  annotations:
+    eks.amazonaws.com/role-arn: <cloudwatch_agent_role_arn>

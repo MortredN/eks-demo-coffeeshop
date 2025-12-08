@@ -357,6 +357,22 @@ resource "aws_vpc_endpoint" "autoscaling" {
   }
 }
 
+resource "aws_vpc_endpoint" "logs" {
+  vpc_id            = var.vpc_id
+  service_name      = "com.amazonaws.${var.region_primary}.logs"
+  vpc_endpoint_type = "Interface"
+  subnet_ids = [
+    var.subnet_ids.eks1,
+    var.subnet_ids.eks2
+  ]
+  security_group_ids  = [aws_eks_cluster.main.vpc_config[0].cluster_security_group_id]
+  private_dns_enabled = true
+
+  tags = {
+    Name = "${var.project_name}-endpoint-logs"
+  }
+}
+
 
 ## Gateway endpoint for S3
 resource "aws_vpc_endpoint" "s3" {
@@ -800,4 +816,43 @@ resource "aws_iam_role_policy" "cluster_autoscaler_policy" {
       },
     ]
   })
+}
+
+
+# CloudWatch Observability Add-on
+## IAM Role & Policy
+resource "aws_iam_role" "cloudwatch_agent_role" {
+  name = "${var.project_name}-cloudwatch-agent-role"
+
+  assume_role_policy = jsonencode({
+    Version = "2012-10-17"
+    Statement = [
+      {
+        Action = "sts:AssumeRoleWithWebIdentity"
+        Effect = "Allow"
+        Principal = {
+          Federated = aws_iam_openid_connect_provider.eks_cluster.arn
+        }
+        Condition = {
+          StringEquals = {
+            "${replace(aws_iam_openid_connect_provider.eks_cluster.url, "https://", "")}:sub" = "system:serviceaccount:amazon-cloudwatch:cloudwatch-agent"
+            "${replace(aws_iam_openid_connect_provider.eks_cluster.url, "https://", "")}:aud" = "sts.amazonaws.com"
+          }
+        }
+      }
+    ]
+  })
+}
+
+resource "aws_iam_role_policy_attachment" "cloudwatch_agent_policy" {
+  policy_arn = "arn:aws:iam::aws:policy/CloudWatchAgentServerPolicy"
+  role       = aws_iam_role.cloudwatch_agent_role.name
+}
+
+
+## EKS Add-on
+resource "aws_eks_addon" "cloudwatch" {
+  cluster_name             = aws_eks_cluster.main.name
+  addon_name               = "amazon-cloudwatch-observability"
+  service_account_role_arn = aws_iam_role.cloudwatch_agent_role.arn
 }
