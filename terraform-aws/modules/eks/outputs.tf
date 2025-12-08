@@ -19,7 +19,7 @@ output "acm_cert_arn" {
 }
 
 output "cloudfront_domain_name" {
-  value = aws_cloudfront_distribution.main[0].domain_name
+  value = var.enable_cloudfront ? aws_cloudfront_distribution.main[0].domain_name : "<cloudfront_creation_disabled>"
 }
 
 output "oidc_eks_cluster_arn" {

@@ -39,7 +39,7 @@ resource "aws_ecr_repository" "cert_manager_cainjector" {
   }
 }
 resource "aws_ecr_repository" "cert_manager_controller" {
-  name                 = "mortredn/eks-demo-coffeeshop-shopping"
+  name                 = "jetstack/cert-manager-controller"
   image_tag_mutability = "MUTABLE"
   lifecycle {
     prevent_destroy = true
@@ -88,6 +88,15 @@ resource "aws_ecr_repository" "sscsi_aws_provider" {
 ## Metrics Server
 resource "aws_ecr_repository" "metrics_server" {
   name                 = "kubernetes-sigs/metrics-server"
+  image_tag_mutability = "MUTABLE"
+  lifecycle {
+    prevent_destroy = true
+  }
+}
+
+## Cluster Autoscaler
+resource "aws_ecr_repository" "cluster_autoscaler" {
+  name                 = "autoscaling/cluster-autoscaler"
   image_tag_mutability = "MUTABLE"
   lifecycle {
     prevent_destroy = true
