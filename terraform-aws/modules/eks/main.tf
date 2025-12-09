@@ -712,9 +712,18 @@ data "aws_lb" "ingress_alb" {
   count = var.enable_cloudfront ? 1 : 0
 
   tags = {
-    "elbv2.k8s.aws/cluster" = aws_eks_cluster.main.name
-    "ingress.k8s.aws/stack" = "${var.alb_namespace}/${var.alb_name}"
+    "elbv2.k8s.aws/cluster"    = aws_eks_cluster.main.name
+    "ingress.k8s.aws/resource" = "LoadBalancer"
+    "ingress.k8s.aws/stack"    = "${var.alb_namespace}/coffeeshop-ingress"
   }
+}
+
+data "aws_cloudfront_cache_policy" "caching_disabled" {
+  name = "Managed-CachingDisabled"
+}
+
+data "aws_cloudfront_origin_request_policy" "all_viewer" {
+  name = "Managed-AllViewer"
 }
 
 resource "aws_cloudfront_distribution" "main" {
@@ -727,18 +736,20 @@ resource "aws_cloudfront_distribution" "main" {
     origin_id   = "alb-origin"
 
     custom_origin_config {
-      http_port              = 80
-      https_port             = 443
-      origin_protocol_policy = "https-only"
-      origin_ssl_protocols   = ["TLSv1.2"]
+      http_port                = 80
+      https_port               = 443
+      origin_protocol_policy   = "https-only"
+      origin_ssl_protocols     = ["TLSv1.2"]
     }
   }
 
   default_cache_behavior {
-    allowed_methods        = ["DELETE", "GET", "HEAD", "OPTIONS", "PATCH", "POST", "PUT"]
-    cached_methods         = ["GET", "HEAD"]
-    target_origin_id       = "alb-origin"
-    viewer_protocol_policy = "redirect-to-https"
+    allowed_methods          = ["DELETE", "GET", "HEAD", "OPTIONS", "PATCH", "POST", "PUT"]
+    cached_methods           = ["GET", "HEAD"]
+    target_origin_id         = "alb-origin"
+    viewer_protocol_policy   = "redirect-to-https"
+    cache_policy_id          = data.aws_cloudfront_cache_policy.caching_disabled.id
+    origin_request_policy_id = data.aws_cloudfront_origin_request_policy.all_viewer.id
   }
 
   restrictions {
@@ -852,6 +863,8 @@ resource "aws_iam_role_policy_attachment" "cloudwatch_agent_policy" {
 
 ## EKS Add-on
 resource "aws_eks_addon" "cloudwatch" {
+  count = var.enable_cloudwatch ? 1 : 0
+
   cluster_name             = aws_eks_cluster.main.name
   addon_name               = "amazon-cloudwatch-observability"
   service_account_role_arn = aws_iam_role.cloudwatch_agent_role.arn

@@ -25,3 +25,9 @@ variable "enable_cloudfront" {
   type        = bool
   default     = false
 }
+
+variable "enable_cloudwatch" {
+  description = "Enable CloudWatch Observability Add-on"
+  type        = bool
+  default     = false
+}

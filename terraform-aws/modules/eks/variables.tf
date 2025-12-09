@@ -50,3 +50,10 @@ variable "alb_namespace" {
   type        = string
   default     = "default"
 }
+
+# Used only if you want to add CloudWatch add-on
+variable "enable_cloudwatch" {
+  description = "Enable CloudWatch Observability Add-on"
+  type        = bool
+  default     = false
+}

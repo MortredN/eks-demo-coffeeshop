@@ -1,2 +1,5 @@
 # Change to true only if AWS ALB is created
 enable_cloudfront = false
+
+# Change to true if want to use CloudWatch add-on
+enable_cloudwatch = false

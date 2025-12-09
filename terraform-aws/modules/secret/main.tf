@@ -20,7 +20,7 @@ resource "aws_iam_role" "sscsi_customer_role" {
         }
         Condition = {
           StringEquals = {
-            "${replace(var.oidc_eks_cluster_url, "https://", "")}:sub" = "system:serviceaccount:default:sscsi-customer-sa"
+            "${replace(var.oidc_eks_cluster_url, "https://", "")}:sub" = "system:serviceaccount:default:aws-secrets-manager-sscsi-customer"
             "${replace(var.oidc_eks_cluster_url, "https://", "")}:aud" = "sts.amazonaws.com"
           }
         }
@@ -67,7 +67,7 @@ resource "aws_iam_role" "sscsi_shopping_role" {
         }
         Condition = {
           StringEquals = {
-            "${replace(var.oidc_eks_cluster_url, "https://", "")}:sub" = "system:serviceaccount:default:sscsi-shopping-sa"
+            "${replace(var.oidc_eks_cluster_url, "https://", "")}:sub" = "system:serviceaccount:default:aws-secrets-manager-sscsi-shopping"
             "${replace(var.oidc_eks_cluster_url, "https://", "")}:aud" = "sts.amazonaws.com"
           }
         }
