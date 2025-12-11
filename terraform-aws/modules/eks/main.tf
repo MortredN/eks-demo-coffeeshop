@@ -28,7 +28,7 @@ resource "aws_iam_role_policy_attachment" "eks_vpc_resource_controller" {
 }
 
 resource "aws_iam_role_policy" "eks_manage_nodes_policy" {
-  name = "${var.project_name}-eks-manage-nodes-policy"
+  name = "EKSManageNodes"
   role = aws_iam_role.eks_cluster_role.id
 
   policy = jsonencode({
@@ -145,7 +145,7 @@ resource "aws_vpc_security_group_ingress_rule" "bastion_to_eks_api" {
 }
 
 
-# Access entry & associated admin policy for  bastion host
+# Access entry & associated admin policy for the bastion host
 resource "aws_eks_access_entry" "bastion" {
   cluster_name  = aws_eks_cluster.main.name
   principal_arn = var.bastion_eks_role_arn
@@ -154,7 +154,7 @@ resource "aws_eks_access_entry" "bastion" {
 
 resource "aws_eks_access_policy_association" "bastion_admin" {
   cluster_name  = aws_eks_cluster.main.name
-  principal_arn = var.bastion_eks_role_arn
+  principal_arn = aws_eks_access_entry.bastion.principal_arn
   policy_arn    = "arn:aws:eks::aws:cluster-access-policy/AmazonEKSClusterAdminPolicy"
 
   access_scope {
@@ -796,7 +796,7 @@ resource "aws_iam_role" "cluster_autoscaler_role" {
 }
 
 resource "aws_iam_role_policy" "cluster_autoscaler_policy" {
-  name = "${var.project_name}-cluster-autoscaler-policy"
+  name = "EKSClusterAutoscaler"
   role = aws_iam_role.cluster_autoscaler_role.id
 
   policy = jsonencode({

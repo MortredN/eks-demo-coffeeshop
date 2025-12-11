@@ -30,7 +30,7 @@ resource "aws_iam_role" "sscsi_customer_role" {
 }
 
 resource "aws_iam_role_policy" "sscsi_customer_policy" {
-  name = "${var.project_name}-sscsi-customer-policy"
+  name = "SSCSI-${var.project_name}-Customer"
   role = aws_iam_role.sscsi_customer_role.id
 
   policy = jsonencode({
@@ -77,7 +77,7 @@ resource "aws_iam_role" "sscsi_shopping_role" {
 }
 
 resource "aws_iam_role_policy" "sscsi_shopping_policy" {
-  name = "${var.project_name}-sscsi-shopping-policy"
+  name = "SSCSI-${var.project_name}-Shopping"
   role = aws_iam_role.sscsi_shopping_role.id
 
   policy = jsonencode({

@@ -50,3 +50,16 @@ module "secret" {
   rds_db_customer_secret_arn = module.rds.rds_db_customer_secret_arn
   rds_db_shopping_secret_arn = module.rds.rds_db_shopping_secret_arn
 }
+
+module "codepipeline" {
+  source            = "./modules/codepipeline"
+  project_name      = local.project_name
+  region_primary    = var.region_primary
+  aws_account_id    = data.aws_caller_identity.current.account_id
+  eks_cluster_name  = module.eks.eks_cluster_name
+  ecr_app_urls      = module.ecr.app_urls
+  vpc_id            = module.vpc.vpc_id
+  subnet_ids        = module.vpc.subnet_ids
+  subnet_arns       = module.vpc.subnet_arns
+  bastion_eks_sg_id = module.bastion.bastion_eks_sg_id
+}

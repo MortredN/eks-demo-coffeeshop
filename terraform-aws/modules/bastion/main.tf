@@ -38,7 +38,7 @@ resource "aws_iam_role_policy_attachment" "ssm_policy_bastion_eks" {
 }
 
 resource "aws_iam_role_policy" "eks_describe_cluster_policy" {
-  name = "${var.project_name}-EKSDescribeCluster"
+  name = "EKSDescribeCluster"
   role = aws_iam_role.bastion_eks_role.id
 
   policy = jsonencode({

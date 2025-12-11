@@ -15,6 +15,19 @@ output "subnet_ids" {
   }
 }
 
+output "subnet_arns" {
+  value = {
+    eks1    = aws_subnet.eks1_subnet.arn
+    eks2    = aws_subnet.eks2_subnet.arn
+    rds1    = aws_subnet.rds1_subnet.arn
+    rds2    = aws_subnet.rds2_subnet.arn
+    alb1    = aws_subnet.alb1_subnet.arn
+    alb2    = aws_subnet.alb2_subnet.arn
+    bastion = aws_subnet.bastion_subnet.arn
+    natgw   = aws_subnet.natgw_subnet.arn
+  }
+}
+
 output "route_table_ids" {
   value = {
     private = aws_route_table.private_rtb.id
