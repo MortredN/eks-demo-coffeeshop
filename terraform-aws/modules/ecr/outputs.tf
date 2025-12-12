@@ -18,5 +18,11 @@ output "helper_urls" {
     sscsi_aws_provider          = data.aws_ecr_repository.sscsi_aws_provider.repository_url
     metrics_server              = data.aws_ecr_repository.metrics_server.repository_url
     cluster_autoscaler          = data.aws_ecr_repository.cluster_autoscaler.repository_url
+    istio_proxyv2               = data.aws_ecr_repository.istio_proxyv2.repository_url
+    istio_pilot                 = data.aws_ecr_repository.istio_pilot.repository_url
+    prometheus                  = data.aws_ecr_repository.prometheus.repository_url
+    prometheus_config_reloader  = data.aws_ecr_repository.prometheus_config_reloader.repository_url
+    grafana                     = data.aws_ecr_repository.grafana.repository_url
+    kiali                       = data.aws_ecr_repository.kiali.repository_url
   }
 }

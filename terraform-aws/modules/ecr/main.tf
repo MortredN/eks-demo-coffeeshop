@@ -50,3 +50,23 @@ data "aws_ecr_repository" "metrics_server" {
 data "aws_ecr_repository" "cluster_autoscaler" {
   name = "autoscaling/cluster-autoscaler"
 }
+
+## Istio
+data "aws_ecr_repository" "istio_proxyv2" {
+  name = "istio/proxyv2"
+}
+data "aws_ecr_repository" "istio_pilot" {
+  name = "istio/pilot"
+}
+data "aws_ecr_repository" "prometheus" {
+  name = "prom/prometheus"
+}
+data "aws_ecr_repository" "prometheus_config_reloader" {
+  name = "prometheus-operator/prometheus-config-reloader"
+}
+data "aws_ecr_repository" "grafana" {
+  name = "grafana/grafana"
+}
+data "aws_ecr_repository" "kiali" {
+  name = "kiali/kiali"
+}

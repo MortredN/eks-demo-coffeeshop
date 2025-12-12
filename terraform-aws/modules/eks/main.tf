@@ -242,6 +242,46 @@ resource "aws_eks_node_group" "general" {
 }
 
 
+resource "aws_eks_node_group" "istio_demo" {
+  cluster_name    = aws_eks_cluster.main.name
+  node_group_name = "istio_demo"
+  node_role_arn   = aws_iam_role.eks_node_role.arn
+  subnet_ids = [
+    var.subnet_ids.eks1,
+    var.subnet_ids.eks2
+  ]
+
+  ami_type       = "AL2023_ARM_64_STANDARD"
+  capacity_type  = "ON_DEMAND"
+  instance_types = ["t4g.xlarge"]
+
+  scaling_config {
+    desired_size = 2
+    min_size     = 2
+    max_size     = 2
+  }
+
+  update_config {
+    max_unavailable = 1
+  }
+
+  launch_template {
+    id      = aws_launch_template.eks_nodes.id
+    version = "$Latest"
+  }
+
+  depends_on = [
+    aws_iam_role_policy_attachment.eks_worker_node_policy,
+    aws_iam_role_policy_attachment.eks_cni_policy,
+    aws_iam_role_policy_attachment.eks_container_registry_policy,
+  ]
+
+  tags = {
+    Name = "${var.project_name}-eks-nodegroup-istio-demo"
+  }
+}
+
+
 # VPC Endpoints
 ## Interface endpoints
 resource "aws_vpc_endpoint" "ec2" {
@@ -736,10 +776,10 @@ resource "aws_cloudfront_distribution" "main" {
     origin_id   = "alb-origin"
 
     custom_origin_config {
-      http_port                = 80
-      https_port               = 443
-      origin_protocol_policy   = "https-only"
-      origin_ssl_protocols     = ["TLSv1.2"]
+      http_port              = 80
+      https_port             = 443
+      origin_protocol_policy = "https-only"
+      origin_ssl_protocols   = ["TLSv1.2"]
     }
   }
 
