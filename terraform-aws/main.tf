@@ -30,6 +30,7 @@ module "eks" {
   bastion_eks_role_arn = module.bastion.bastion_eks_role_arn
   bastion_eks_sg_id    = module.bastion.bastion_eks_sg_id
   enable_cloudfront    = var.enable_cloudfront
+  alb_namespace        = var.alb_namespace
   enable_cloudwatch    = var.enable_cloudwatch
 }
 

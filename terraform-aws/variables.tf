@@ -25,6 +25,11 @@ variable "enable_cloudfront" {
   type        = bool
   default     = false
 }
+variable "alb_namespace" {
+  description = "Namespace where the ALB is deployed"
+  type        = string
+  default     = "default"
+}
 
 variable "enable_cloudwatch" {
   description = "Enable CloudWatch Observability Add-on"

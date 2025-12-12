@@ -40,11 +40,6 @@ variable "enable_cloudfront" {
   type        = bool
   default     = false
 }
-variable "alb_name" {
-  description = "The ALB's name (based on the ingress manifest)"
-  type        = string
-  default     = "eks-demo-alb"
-}
 variable "alb_namespace" {
   description = "Namespace where the ALB is deployed"
   type        = string
