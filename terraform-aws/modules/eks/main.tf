@@ -273,7 +273,7 @@ resource "aws_eks_node_group" "istio_demo" {
   depends_on = [
     aws_iam_role_policy_attachment.eks_worker_node_policy,
     aws_iam_role_policy_attachment.eks_cni_policy,
-    aws_iam_role_policy_attachment.eks_container_registry_policy,
+    aws_iam_role_policy_attachment.ec2_container_registry_policy,
   ]
 
   tags = {
@@ -752,9 +752,8 @@ data "aws_lb" "ingress_alb" {
   count = var.enable_cloudfront ? 1 : 0
 
   tags = {
-    "elbv2.k8s.aws/cluster"    = aws_eks_cluster.main.name
-    "ingress.k8s.aws/resource" = "LoadBalancer"
-    "ingress.k8s.aws/stack"    = "${var.alb_namespace}/coffeeshop-ingress"
+    "elbv2.k8s.aws/cluster" = aws_eks_cluster.main.name
+    "ingress.k8s.aws/stack" = "${var.ingress_namespace}/coffeeshop-ingress"
   }
 }
 

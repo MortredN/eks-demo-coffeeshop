@@ -25,8 +25,8 @@ variable "enable_cloudfront" {
   type        = bool
   default     = false
 }
-variable "alb_namespace" {
-  description = "Namespace where the ALB is deployed"
+variable "ingress_namespace" {
+  description = "Namespace where the ingress is deployed in the cluster"
   type        = string
   default     = "default"
 }

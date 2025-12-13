@@ -10,6 +10,10 @@ output "ecr_helper_urls" {
   value = module.ecr.helper_urls
 }
 
+output "vpc_subnet_ids" {
+  value = module.vpc.subnet_ids
+}
+
 output "bastion_eks_instance_id" {
   value = module.bastion.bastion_eks_instance_id
 }

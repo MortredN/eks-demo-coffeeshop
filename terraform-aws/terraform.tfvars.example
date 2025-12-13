@@ -3,3 +3,6 @@ enable_cloudfront = false
 
 # Change to true if want to use CloudWatch add-on
 enable_cloudwatch = false
+
+# Change namespace of ingress if using Istio (default -> istio-system)
+ingress_namespace = "default"

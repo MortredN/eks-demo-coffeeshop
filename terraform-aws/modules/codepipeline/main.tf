@@ -109,7 +109,7 @@ resource "aws_codebuild_project" "frontend" {
     }
     environment_variable {
       name  = "ECR_REPOSITORY"
-      value = split("/", var.ecr_app_urls.frontend)[1] # Repository part
+      value = replace(var.ecr_app_urls.frontend, "${split("/", var.ecr_app_urls.frontend)[0]}/", "") # Repository part
     }
   }
 
@@ -130,6 +130,19 @@ resource "aws_iam_role_policy" "codepipeline_base_policy" {
   policy = jsonencode({
     Version = "2012-10-17"
     Statement = [
+      {
+        Effect   = "Allow"
+        Action   = "iam:PassRole"
+        Resource = "*"
+        Condition = {
+          StringEqualsIfExists = {
+            "iam:PassedToService" = [
+              "codepipeline.amazonaws.com",
+              "codebuild.amazonaws.com"
+            ]
+          }
+        }
+      },
       {
         Effect = "Allow"
         Action = [
@@ -157,7 +170,9 @@ resource "aws_iam_role_policy" "codepipeline_base_policy" {
       {
         Effect = "Allow"
         Action = [
+          "codestar-connections:GetConnection",
           "codestar-connections:UseConnection",
+          "codeconnections:GetConnection",
           "codeconnections:UseConnection"
         ]
         Resource = data.aws_codestarconnections_connection.github.arn
@@ -184,6 +199,16 @@ resource "aws_iam_role_policy" "codebuild_base_policy" {
   policy = jsonencode({
     Version = "2012-10-17"
     Statement = [
+      {
+        Effect   = "Allow"
+        Action   = "iam:PassRole"
+        Resource = "*"
+        Condition = {
+          StringEquals = {
+            "iam:PassedToService" = "codebuild.amazonaws.com"
+          }
+        }
+      },
       {
         Effect = "Allow"
         Action = [
